@@ -87,3 +87,19 @@ inner join employees e
 group by to_char(sale_date, 'Day'), EXTRACT(ISODOW from sale_date), concat(first_name,' ', middle_initial, ' ', last_name) --группировка по дню недели + продавцу
 order by EXTRACT(ISODOW from sale_date), seller --сортировка по номеру дня недели, где понедельник - 1, вскр - 7
 ;
+
+6a)
+with category_by_age as (select age, --создал вирт.таблицу
+case when age >= 16 and age <= 25 then '16-25' --добавил возрастную категорию для каждого покупателя
+	 when age >= 26 and age <= 40 then '26-40'
+	 when age >= 41 then '40+'
+	 else 'uncategory' -- на всякий случай добавил категорию, если возраст покупателя не попал под остальные условия
+end as age_category
+from customers
+)
+select age_category,
+	count(*) --посчитал количество
+from category_by_age
+group by age_category --сгруппировал по возрасту
+order by age_category --отсортировал по возрасту 
+;
