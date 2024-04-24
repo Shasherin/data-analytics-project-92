@@ -16,6 +16,7 @@ with customers_checked as ( /*создаю виртуальную таблицу
 /*фильтрую дублирующиеся записи,
 сравнивая уникальность четырех полей: ФИО + возраст*/
 )
+
 select count(*) as customers_count
 /*считаю количество записей (уникальность каждой строки проверена ранее)*/
 from customers_checked;
@@ -63,6 +64,7 @@ with income_by_seller as (
         on s.product_id = p.product_id
     group by s.sales_person_id, concat(e.first_name, ' ', e.last_name)
 )
+
 select
     seller,
     average_income
@@ -125,6 +127,7 @@ with category_by_age as (
         end as age_category
     from customers
 )
+
 select
     age_category,
     count(*) as age_count/*посчитал количество*/
@@ -179,6 +182,7 @@ with rn_sales as ( /*создаём виртуальную таблицу*/
     (при наличии нескольких в 1 день)*/
     from sales
 )
+
 select
     concat(c.first_name, ' ', c.last_name) as customer,
     /*объединяем ФИО покупателя*/
