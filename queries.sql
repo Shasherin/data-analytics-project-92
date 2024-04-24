@@ -179,7 +179,6 @@ with rn_sales as ( /*создаём виртуальную таблицу*/
     (при наличии нескольких в 1 день)*/
     from sales
 )
-
 select
     concat(c.first_name, ' ', c.last_name) as customer,
     /*объединяем ФИО покупателя*/
