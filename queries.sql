@@ -73,27 +73,6 @@ where average_income < (select floor(avg(average_income)) from income_by_seller)
 /* сравнил среднюю выручку каждого продавца с общей средней по всем*/
 order by average_income;
 
-/*Или
-with income_by_seller as (select
-concat(first_name,' ', last_name) as seller,
-count(s.sales_id) as operations,
-sum(quantity * price) as income,
-floor(avg (quantity * price)) as average_income,
-count(sales_id) as count_of_sales --посчитал количество продаж
-from sales s
-inner join products p
-	on s.product_id = p.product_id
-inner join employees e
-	on e.employee_id = s.sales_person_id
-group by sales_person_id, concat(first_name,' ', last_name)
-)
-select seller,
-	average_income
-from income_by_seller
-where average_income < (select floor(sum(income) / sum(count_of_sales))
-from income_by_seller) --сравнил с отношением суммы продаж к количеству продаж
-order by average_income;*/
-
 /*отчет с данными по выручке по каждому продавцу и дню недели*/
 select
     concat(e.first_name, ' ', e.last_name) as seller,
@@ -146,27 +125,6 @@ inner join products as p
     on s.product_id = p.product_id
 group by to_char(s.sale_date, 'YYYY-MM')
 order by to_char(s.sale_date, 'YYYY-MM');
-
-/*или
-select
-    extract(year from s.sale_date)::text || '-' ||/*извлекли год,добавили'-'*/
-    lpad(extract(month from s.sale_date)::text, 2, '0') as selling_month,
-    /*извлекли месяц + привели к двузначному числу(добавляем слева 0,
-    до 2х символов в номере) для корректной сортировки*/
-    count(distinct s.customer_id) as total_customers,
-    /*посчитали кол-во уникальных покупателей*/
-    floor(sum(s.quantity * p.price)) as income
-from sales as s
-inner join products as p
-    on s.product_id = p.product_id
-group by
-    extract(year from s.sale_date)::text || '-' ||
-    lpad(extract(month from s.sale_date)::text, 2, '0')
-/*сгруппировали по YYYY-MM*/
-order by
-    extract(year from s.sale_date)::text || '-' ||
-    lpad(extract(month from s.sale_date)::text, 2, '0');
-/*отсортировали по YYYY-MM*/*/
 
 /*отчет  с покупателями первая покупка которых пришлась
 на время проведения специальных акций*/
